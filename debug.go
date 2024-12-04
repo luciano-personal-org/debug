@@ -7,19 +7,17 @@ import (
 	globaldebug "runtime/debug"
 )
 
-// DebugOptions enum
-type DebugOptions int
-
-// DebugOptions enum values
 const (
-	STACKTRACE DebugOptions = iota
-	MEMSTATS
-	GCSTATS
-	BUILDINFO
+	INFO  = "INFO"
+	STACK = "STACK"
+	MEM   = "MEM"
+	GC    = "GC"
+	BUILD = "BUILD"
+	ALL   = "ALL"
 )
 
 // PrintDebug prints debug information
-func PrintDebug(message string, options ...DebugOptions) {
+func PrintDebug(message string, option string) {
 
 	var gcStats globaldebug.GCStats
 	var memStats runtime.MemStats
@@ -35,12 +33,12 @@ func PrintDebug(message string, options ...DebugOptions) {
 	fmt.Println(message)
 
 	// Stack Trace
-	if containsOption(options, STACKTRACE) {
+	if option == STACK || option == ALL {
 		fmt.Printf("Stack Trace:\n%s\n", debug.Stack())
 	}
 
 	// Mem Stats
-	if containsOption(options, MEMSTATS) {
+	if option == MEM || option == ALL {
 		fmt.Printf("Alloc: %d bytes\n", memStats.Alloc)
 		fmt.Printf("TotalAlloc: %d bytes\n", memStats.TotalAlloc)
 		fmt.Printf("HeapAlloc: %d bytes\n", memStats.HeapAlloc)
@@ -53,7 +51,7 @@ func PrintDebug(message string, options ...DebugOptions) {
 	}
 
 	// GC Stats
-	if containsOption(options, GCSTATS) {
+	if option == GC || option == ALL {
 		fmt.Printf("LastGC: %v\n", gcStats.LastGC)
 		fmt.Printf("NumGC: %v\n", gcStats.NumGC)
 		fmt.Printf("PauseTotal: %v\n", gcStats.PauseTotal)
@@ -63,19 +61,9 @@ func PrintDebug(message string, options ...DebugOptions) {
 	}
 
 	// Build Info
-	if containsOption(options, BUILDINFO) {
+	if option == BUILD || option == ALL {
 		if ok {
 			fmt.Printf("Build Info:\n%s\n", buildInfo)
 		}
 	}
-
-}
-
-func containsOption(options []DebugOptions, option DebugOptions) bool {
-	for _, opt := range options {
-		if opt == option {
-			return true
-		}
-	}
-	return false
 }
