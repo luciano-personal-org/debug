@@ -51,7 +51,7 @@ func PrintDebug(message string, level string) error {
 	buildInfo, ok := globaldebug.ReadBuildInfo()
 
 	// Initial Messages
-	fmt.Println("Debugging...")
+	fmt.Println("\nStart debug...")
 
 	// Business Message
 	fmt.Println(message)
@@ -90,6 +90,8 @@ func PrintDebug(message string, level string) error {
 			fmt.Printf("Build Info:\n%s\n", buildInfo)
 		}
 	}
+
+	fmt.Println("\nFinish debug...")
 
 	return nil
 }
