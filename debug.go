@@ -28,7 +28,7 @@ func PrintDebug(message string, options ...DebugOptions) {
 	runtime.ReadMemStats(&memStats)
 	buildInfo, ok := globaldebug.ReadBuildInfo()
 
-	// Initial Message
+	// Initial Messages
 	fmt.Println("Debugging...")
 
 	// Business Message
