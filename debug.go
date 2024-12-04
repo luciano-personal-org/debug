@@ -10,12 +10,12 @@ import (
 
 // DebugOptions is a type for debug options
 const (
-	INFO       = "INFO"  // Default
-	STACKTRACE = "STACK" // Stack Trace
-	MEMSTATS   = "MEM"   // Memory Stats
-	GCSTATS    = "GC"    // GC Stats
-	BUILDSTATS = "BUILD" // Build Info
-	ALLSTATS   = "ALL"   // All Stats
+	INFO  = "INFO"  // Default
+	STACK = "STACK" // Stack Trace
+	MEM   = "MEM"   // Memory Stats
+	GC    = "GC"    // GC Stats
+	BUILD = "BUILD" // Build Info
+	ALL   = "ALL"   // All Stats
 )
 
 type DebugOptions struct {
@@ -26,7 +26,7 @@ type DebugOptions struct {
 // isValidOption validates the debug option
 func isValidOption(level string) bool {
 	switch level {
-	case INFO, STACKTRACE, MEMSTATS, GCSTATS, BUILDSTATS, ALLSTATS:
+	case INFO, STACK, MEM, GC, BUILD, ALL:
 		return true
 	default:
 		return false
@@ -57,12 +57,12 @@ func PrintDebug(message string, level string) error {
 	fmt.Println(message)
 
 	// Stack Trace
-	if level == STACKTRACE || level == ALLSTATS {
+	if level == STACK || level == ALL {
 		fmt.Printf("Stack Trace:\n%s\n", debug.Stack())
 	}
 
 	// Mem Stats
-	if level == MEMSTATS || level == ALLSTATS {
+	if level == MEM || level == ALL {
 		fmt.Printf("Alloc: %d bytes\n", memStats.Alloc)
 		fmt.Printf("TotalAlloc: %d bytes\n", memStats.TotalAlloc)
 		fmt.Printf("HeapAlloc: %d bytes\n", memStats.HeapAlloc)
@@ -75,7 +75,7 @@ func PrintDebug(message string, level string) error {
 	}
 
 	// GC Stats
-	if level == GCSTATS || level == ALLSTATS {
+	if level == GC || level == ALL {
 		fmt.Printf("LastGC: %v\n", gcStats.LastGC)
 		fmt.Printf("NumGC: %v\n", gcStats.NumGC)
 		fmt.Printf("PauseTotal: %v\n", gcStats.PauseTotal)
@@ -85,7 +85,7 @@ func PrintDebug(message string, level string) error {
 	}
 
 	// Build Info
-	if level == BUILDSTATS || level == ALLSTATS {
+	if level == BUILD || level == ALL {
 		if ok {
 			fmt.Printf("Build Info:\n%s\n", buildInfo)
 		}
