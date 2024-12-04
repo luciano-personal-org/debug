@@ -7,17 +7,32 @@ import (
 	globaldebug "runtime/debug"
 )
 
+// DebugOptions is a type for debug options
 const (
-	INFO  = "INFO"
-	STACK = "STACK"
-	MEM   = "MEM"
-	GC    = "GC"
-	BUILD = "BUILD"
-	ALL   = "ALL"
+	INFO       = "INFO"  // Default
+	STACKTRACE = "STACK" // Stack Trace
+	MEMSTATS   = "MEM"   // Memory Stats
+	GCSTATS    = "GC"    // GC Stats
+	BUILDSTATS = "BUILD" // Build Info
+	ALLSTATS   = "ALL"   // All Stats
 )
+
+// isValidOption validates the debug option
+func isValidOption(option string) bool {
+	switch option {
+	case INFO, STACKTRACE, MEMSTATS, GCSTATS, BUILDSTATS, ALLSTATS:
+		return true
+	default:
+		return false
+	}
+}
 
 // PrintDebug prints debug information
 func PrintDebug(message string, option string) {
+	if !isValidOption(option) {
+		fmt.Println("Invalid debug option: ", option)
+		return
+	}
 
 	var gcStats globaldebug.GCStats
 	var memStats runtime.MemStats
@@ -33,12 +48,12 @@ func PrintDebug(message string, option string) {
 	fmt.Println(message)
 
 	// Stack Trace
-	if option == STACK || option == ALL {
+	if option == STACKTRACE || option == ALLSTATS {
 		fmt.Printf("Stack Trace:\n%s\n", debug.Stack())
 	}
 
 	// Mem Stats
-	if option == MEM || option == ALL {
+	if option == MEMSTATS || option == ALLSTATS {
 		fmt.Printf("Alloc: %d bytes\n", memStats.Alloc)
 		fmt.Printf("TotalAlloc: %d bytes\n", memStats.TotalAlloc)
 		fmt.Printf("HeapAlloc: %d bytes\n", memStats.HeapAlloc)
@@ -51,7 +66,7 @@ func PrintDebug(message string, option string) {
 	}
 
 	// GC Stats
-	if option == GC || option == ALL {
+	if option == GCSTATS || option == ALLSTATS {
 		fmt.Printf("LastGC: %v\n", gcStats.LastGC)
 		fmt.Printf("NumGC: %v\n", gcStats.NumGC)
 		fmt.Printf("PauseTotal: %v\n", gcStats.PauseTotal)
@@ -61,7 +76,7 @@ func PrintDebug(message string, option string) {
 	}
 
 	// Build Info
-	if option == BUILD || option == ALL {
+	if option == BUILDSTATS || option == ALLSTATS {
 		if ok {
 			fmt.Printf("Build Info:\n%s\n", buildInfo)
 		}
