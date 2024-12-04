@@ -17,9 +17,14 @@ const (
 	ALLSTATS   = "ALL"   // All Stats
 )
 
+type DebugOptions struct {
+	Enabled bool
+	Level   string
+}
+
 // isValidOption validates the debug option
-func isValidOption(option string) bool {
-	switch option {
+func isValidOption(level string) bool {
+	switch level {
 	case INFO, STACKTRACE, MEMSTATS, GCSTATS, BUILDSTATS, ALLSTATS:
 		return true
 	default:
@@ -28,17 +33,21 @@ func isValidOption(option string) bool {
 }
 
 // PrintDebug prints debug information
-func PrintDebug(message string, option string) {
-	if !isValidOption(option) {
-		fmt.Println("Invalid debug option: ", option)
+func PrintDebug(message string, level string) {
+	if !isValidOption(level) {
+		fmt.Println("Invalid debug option: ", level)
 		return
 	}
 
+	// Read GC Stats
 	var gcStats globaldebug.GCStats
-	var memStats runtime.MemStats
-
 	globaldebug.ReadGCStats(&gcStats)
+
+	// Read Mem Stats
+	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
+
+	// Read Build Info
 	buildInfo, ok := globaldebug.ReadBuildInfo()
 
 	// Initial Messages
@@ -48,12 +57,12 @@ func PrintDebug(message string, option string) {
 	fmt.Println(message)
 
 	// Stack Trace
-	if option == STACKTRACE || option == ALLSTATS {
+	if level == STACKTRACE || level == ALLSTATS {
 		fmt.Printf("Stack Trace:\n%s\n", debug.Stack())
 	}
 
 	// Mem Stats
-	if option == MEMSTATS || option == ALLSTATS {
+	if level == MEMSTATS || level == ALLSTATS {
 		fmt.Printf("Alloc: %d bytes\n", memStats.Alloc)
 		fmt.Printf("TotalAlloc: %d bytes\n", memStats.TotalAlloc)
 		fmt.Printf("HeapAlloc: %d bytes\n", memStats.HeapAlloc)
@@ -66,7 +75,7 @@ func PrintDebug(message string, option string) {
 	}
 
 	// GC Stats
-	if option == GCSTATS || option == ALLSTATS {
+	if level == GCSTATS || level == ALLSTATS {
 		fmt.Printf("LastGC: %v\n", gcStats.LastGC)
 		fmt.Printf("NumGC: %v\n", gcStats.NumGC)
 		fmt.Printf("PauseTotal: %v\n", gcStats.PauseTotal)
@@ -76,7 +85,7 @@ func PrintDebug(message string, option string) {
 	}
 
 	// Build Info
-	if option == BUILDSTATS || option == ALLSTATS {
+	if level == BUILDSTATS || level == ALLSTATS {
 		if ok {
 			fmt.Printf("Build Info:\n%s\n", buildInfo)
 		}
