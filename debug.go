@@ -1,6 +1,7 @@
 package debug
 
 import (
+	"errors"
 	"fmt"
 	"runtime"
 	"runtime/debug"
@@ -33,10 +34,9 @@ func isValidOption(level string) bool {
 }
 
 // PrintDebug prints debug information
-func PrintDebug(message string, level string) {
+func PrintDebug(message string, level string) error {
 	if !isValidOption(level) {
-		fmt.Println("Invalid debug option: ", level)
-		return
+		return errors.New("invalid debug option: " + level)
 	}
 
 	// Read GC Stats
@@ -90,4 +90,6 @@ func PrintDebug(message string, level string) {
 			fmt.Printf("Build Info:\n%s\n", buildInfo)
 		}
 	}
+
+	return nil
 }
