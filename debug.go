@@ -34,7 +34,16 @@ func isValidOption(level string) bool {
 }
 
 // PrintDebug prints debug information
-func PrintDebug(message string, level string) error {
+func PrintDebug(message string, options DebugOptions) error {
+
+	var level = options.Level
+
+	// If Debug is disabled, return
+	if !options.Enabled {
+		return nil
+	}
+
+	// Default Level
 	if !isValidOption(level) {
 		return errors.New("invalid debug option: " + level)
 	}
