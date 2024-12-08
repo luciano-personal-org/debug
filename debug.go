@@ -80,6 +80,8 @@ func PrintDebug(message string, options DebugOptions) error {
 		fmt.Printf("HeapInuse: %d bytes\n", memStats.HeapInuse)
 		fmt.Printf("HeapReleased: %d bytes\n", memStats.HeapReleased)
 		fmt.Printf("HeapObjects: %d\n", memStats.HeapObjects)
+		fmt.Printf("StackInUse: %d bytes\n", memStats.StackInuse)
+		fmt.Printf("StackSys: %d bytes\n", memStats.StackSys)
 		fmt.Printf("NumGC: %d\n", memStats.NumGC)
 	}
 
