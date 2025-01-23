@@ -7,7 +7,6 @@ import (
 	"runtime/debug"
 	globaldebug "runtime/debug"
 
-	"github.com/DataDog/appsec-internal-go/log"
 	"github.com/go-logr/logr"
 )
 
@@ -146,7 +145,7 @@ func PrintDebugWithLog(message string, options DebugOptions, logger logr.Logger)
 	// Stack Trace
 	if level == STACK || level == ALL {
 		stack := fmt.Sprintf("Stack Trace:%s", debug.Stack())
-		log.Info(stack)
+		logger.WithCallDepth(2).Info(stack)
 	}
 
 	// Mem Stats
